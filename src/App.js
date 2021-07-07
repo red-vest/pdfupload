@@ -41,8 +41,14 @@ const App = () => {
       let url = upPdfUrl.split('?')[0] + '?filename=' + file.name
       setUpPdfUrl(url)
     },
+    onRemove:(e)=>{
+      setResUrl('')
+      setPdfList([])
+    },
     onChange: (e) => {
       if (e.file['response'] !== undefined) {
+        setResUrl(e.fileList)
+        message.info(e.file['response']['status'])
         setResUrl(e.file['response']['data']['url'])
       }
     }
@@ -54,8 +60,14 @@ const App = () => {
       let url = upPdfUrl.split('?')[0] + '?filename=' + file.name
       setUpPdfUrl(url)
     },
+    onRemove:(e)=>{
+      setCoverUrl('')
+      setCoverList([])
+    },
     onChange: (e) => {
       if (e.file['response'] !== undefined) {
+        message.info(e.file['response']['status'])
+        setCoverList(e.fileList)
         setCoverUrl(e.file['response']['data']['url'])
       }
     }
@@ -119,6 +131,7 @@ const App = () => {
             maxCount={1}
             fileList={pdfList}
             action={upPdfUrl}
+            accept={'.pdf'}
             name="file"
             {...props}
           >
@@ -161,6 +174,7 @@ const App = () => {
             maxCount={1}
             action={upPdfUrl}
             name="file"
+            accept={'image/*'}
             {...propsTwo}
             listType="picture">
             <Button icon={<UploadOutlined/>}>点击上传封面</Button>
