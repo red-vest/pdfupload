@@ -7,6 +7,7 @@ import {
   Button,
   Upload,
   Cascader, Input,
+  message
 } from 'antd'
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons'
 import axios from 'axios'
@@ -23,36 +24,66 @@ const formItemLayout = {
 }
 const App = () => {
   const [cateList, setCateList] = useState(b)
-  const [cateId, setCateId] = useState(3)
-  const [cityCode, setCityCode] = useState(0)
+  const [cateId, setCateId] = useState('')
+  const [cityCode, setCityCode] = useState('')
   const [pageNum, setPageNum] = useState(0)
   const [titleName, setTitleName] = useState('')
   const [resUrl, setResUrl] = useState('')
   const [coverUrl, setCoverUrl] = useState('')
   const [pagePrice, setPagePrice] = useState(0.1)
   const [courieFee, setCourieFee] = useState(12)
-  const [pdfList,setPdfList] = useState([])
+  const [pdfList, setPdfList] = useState([])
   const [upPdfUrl, setUpPdfUrl] = useState('https://api.xtjzx.cn/storage/res')
+  const [coverList, setCoverList] = useState([])
   const props = {
     beforeUpload: file => {
       setPdfList([file])
       let url = upPdfUrl.split('?')[0] + '?filename=' + file.name
       setUpPdfUrl(url)
+    },
+    onChange: (e) => {
+      if (e.file['response'] !== undefined) {
+        setResUrl(e.file['response']['data']['url'])
+      }
+    }
+  }
+
+  const propsTwo = {
+    beforeUpload: file => {
+      setCoverList([file])
+      let url = upPdfUrl.split('?')[0] + '?filename=' + file.name
+      setUpPdfUrl(url)
+    },
+    onChange: (e) => {
+      if (e.file['response'] !== undefined) {
+        setCoverUrl(e.file['response']['data']['url'])
+      }
     }
   }
   const submit = () => {
-    console.log(pageNum,cateId,cityCode,titleName,resUrl,coverUrl,pagePrice,courieFee)
+    if(pageNum===0||cateId===''||cityCode===''||titleName===''||resUrl===''||coverUrl===''||pagePrice==''||courieFee==''){
+      message.error('请检查是否存在未填写项，或者填写内容错误')
+      return
+    }
     setPdfList([])
-    axios.post('https://api.xtjzx.cn/data_pack/api/data/upload',{
-      page_num:pageNum,
-      category_id:cateId,
-      area_code:cityCode,
-      title_name:titleName,
-      res_url:resUrl,
-      cover_url:coverUrl,
-      page_price:pagePrice,
-      courie_fee:courieFee
-    }).then(res=>console.log(res)).catch(err=>console.log(err))
+    axios.post('https://zl.xtjzx.cn/data_pack/api/data/upload', {
+      page_num: pageNum,
+      category_id: cateId,
+      area_code: cityCode,
+      title_name: titleName,
+      res_url: resUrl,
+      cover_url: coverUrl,
+      page_price: pagePrice*100,
+      courie_fee: courieFee*100
+    }).then(res => {
+      message.success('提交成功')
+      setResUrl('')
+      setCoverUrl('')
+      setPdfList([])
+      setCoverList([])
+      setTitleName('')
+      setPageNum(0)
+    }).catch(err => console.log(err))
   }
   return (
     <div>
@@ -96,7 +127,7 @@ const App = () => {
         </Form.Item>
         <Form.Item label="页数">
           <Form.Item noStyle>
-            <InputNumber onChange={e => {setPageNum(e)}} min={1} max={999}/>
+            <InputNumber value={pageNum} onChange={e => {setPageNum(e)}} min={1} max={999}/>
           </Form.Item>
         </Form.Item>
         <Form.Item label="每页价格">
@@ -124,28 +155,20 @@ const App = () => {
           </Form.Item>
         </Form.Item>
 
-        <Form.Item
-          label="上传封面"
-        >
+        <Form.Item label="上传封面">
           <Upload
-            action="https://api.xtjzx.cn/storage/res"
+            fileList={coverList}
+            maxCount={1}
+            action={upPdfUrl}
             name="file"
-            listType="picture"
-          >
+            {...propsTwo}
+            listType="picture">
             <Button icon={<UploadOutlined/>}>点击上传封面</Button>
           </Upload>
         </Form.Item>
-
-
         <Form.Item
-          wrapperCol={{
-            span: 12,
-            offset: 6,
-          }}
-        >
-          <Button onClick={() => submit()} type="primary">
-            提交
-          </Button>
+          wrapperCol={{ span: 12, offset: 6, }}>
+          <Button onClick={() => submit()} type="primary">提交</Button>
         </Form.Item>
 
       </Form>
