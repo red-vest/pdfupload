@@ -41,7 +41,7 @@ const App = () => {
       let url = upPdfUrl.split('?')[0] + '?filename=' + file.name
       setUpPdfUrl(url)
     },
-    onRemove:(e)=>{
+    onRemove: (e) => {
       setResUrl('')
       setPdfList([])
     },
@@ -60,7 +60,7 @@ const App = () => {
       let url = upPdfUrl.split('?')[0] + '?filename=' + file.name
       setUpPdfUrl(url)
     },
-    onRemove:(e)=>{
+    onRemove: (e) => {
       setCoverUrl('')
       setCoverList([])
     },
@@ -72,8 +72,11 @@ const App = () => {
       }
     }
   }
+  const filter = (inputValue, path) => {
+    return path.some(option => option.Name.indexOf(inputValue) > -1);
+  }
   const submit = () => {
-    if(pageNum===0||cateId===''||cityCode===''||titleName===''||resUrl===''||coverUrl===''||pagePrice==''||courieFee==''){
+    if (pageNum === 0 || cateId === '' || cityCode === '' || titleName === '' || resUrl === '' || coverUrl === '' || pagePrice == '' || courieFee == '') {
       message.error('请检查是否存在未填写项，或者填写内容错误')
       return
     }
@@ -85,8 +88,8 @@ const App = () => {
       title_name: titleName,
       res_url: resUrl,
       cover_url: coverUrl,
-      page_price: pagePrice*100,
-      courie_fee: courieFee*100
+      page_price: pagePrice * 100,
+      courie_fee: courieFee * 100
     }).then(res => {
       message.success('提交成功')
       setResUrl('')
@@ -119,7 +122,7 @@ const App = () => {
         <Form.Item
           name="select-city"
           label="地区选择">
-          <Cascader placeholder="请选择对应地区" onChange={(e) => {setCityCode(e[1])}} options={a}
+          <Cascader showSearch={{filter}} placeholder="请选择对应地区" onChange={(e) => {setCityCode(e[1])}} options={a}
                     fieldNames={{ label: 'Name', value: 'Code', children: 'Cits' }}/>
         </Form.Item>
 
