@@ -5,13 +5,12 @@ import {
   Select,
   InputNumber,
   Button,
-  Upload,
-  Cascader, Input,
+  Upload,Input,
   message
 } from 'antd'
-import { UploadOutlined, InboxOutlined } from '@ant-design/icons'
+import { UploadOutlined } from '@ant-design/icons'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 const { Option } = Select
 const formItemLayout = {
@@ -23,7 +22,7 @@ const formItemLayout = {
   },
 }
 const App = () => {
-  const [cateList, setCateList] = useState(b)
+  const [cateList] = useState(b)
   const [cateId, setCateId] = useState('')
   const [cityCode, setCityCode] = useState('')
   const [pageNum, setPageNum] = useState(0)
@@ -72,11 +71,8 @@ const App = () => {
       }
     }
   }
-  const filter = (inputValue, path) => {
-    return path.some(option => option.Name.indexOf(inputValue) > -1);
-  }
   const submit = () => {
-    if (pageNum === 0 || cateId === '' || cityCode === '' || titleName === '' || resUrl === '' || coverUrl === '' || pagePrice == '' || courieFee == '') {
+    if (pageNum === 0 || cateId === '' || cityCode === '' || titleName === '' || resUrl === '' || coverUrl === '' ) {
       message.error('请检查是否存在未填写项，或者填写内容错误')
       return
     }
@@ -84,7 +80,7 @@ const App = () => {
     axios.post('https://zl.xtjzx.cn/data_pack/api/data/upload', {
       page_num: pageNum,
       category_id: cateId,
-      area_code: cityCode,
+      area_codes: cityCode,
       title_name: titleName,
       res_url: resUrl,
       cover_url: coverUrl,
@@ -122,8 +118,25 @@ const App = () => {
         <Form.Item
           name="select-city"
           label="地区选择">
-          <Cascader showSearch={{filter}} placeholder="请选择对应地区" onChange={(e) => {setCityCode(e[1])}} options={a}
-                    fieldNames={{ label: 'Name', value: 'Code', children: 'Cits' }}/>
+          <Select
+            mode="multiple"
+            allowClear
+            placeholder="请选择对应地区"
+            onChange={(e) => {
+              let str = ''
+              e.forEach(i=>{
+                str = str+i+',';
+              })
+              setCityCode(str)
+            }}
+            filterOption={(input, option) =>
+              option.children.indexOf(input) >= 0
+            }
+          >
+            {a.map(item=>{
+              return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+            })}
+          </Select>
         </Form.Item>
 
         <Form.Item
@@ -142,34 +155,28 @@ const App = () => {
           </Upload>
         </Form.Item>
         <Form.Item label="页数">
-          <Form.Item noStyle>
             <InputNumber value={pageNum} onChange={e => {setPageNum(e)}} min={1} max={999}/>
-          </Form.Item>
         </Form.Item>
-        <Form.Item label="每页价格">
-          <Form.Item noStyle>
-            <InputNumber
-              defaultValue={0.1}
-              step="0.1"
-              min={0}
-              formatter={value => `￥${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              parser={value => value.replace(/\￥\s?|(,*)/g, '')}
-              onChange={e => {setPagePrice(e)}}
-            />
-          </Form.Item>
-        </Form.Item>
-        <Form.Item label="邮费">
-          <Form.Item noStyle>
-            <InputNumber
-              defaultValue={12}
-              step="1"
-              min={0}
-              formatter={value => `￥${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              parser={value => value.replace(/\￥\s?|(,*)/g, '')}
-              onChange={e => {setCourieFee(e)}}
-            />
-          </Form.Item>
-        </Form.Item>
+        {/*<Form.Item label="每页价格">*/}
+        {/*    <InputNumber*/}
+        {/*      defaultValue={0.1}*/}
+        {/*      step="0.1"*/}
+        {/*      min={0}*/}
+        {/*      formatter={value => `￥${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}*/}
+        {/*      parser={value => value.replace(/\￥\s?|(,*)/g, '')}*/}
+        {/*      onChange={e => {setPagePrice(e)}}*/}
+        {/*    />*/}
+        {/*</Form.Item>*/}
+        {/*<Form.Item label="邮费">*/}
+        {/*    <InputNumber*/}
+        {/*      defaultValue={12}*/}
+        {/*      step="1"*/}
+        {/*      min={0}*/}
+        {/*      formatter={value => `￥${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}*/}
+        {/*      parser={value => value.replace(/\￥\s?|(,*)/g, '')}*/}
+        {/*      onChange={e => {setCourieFee(e)}}*/}
+        {/*    />*/}
+        {/*</Form.Item>*/}
 
         <Form.Item label="上传封面">
           <Upload
