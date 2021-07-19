@@ -842,7 +842,7 @@ export const a = [
     'Initials': 'Z'
   }
 ]
-export const b = [{ 'id': 3, 'categoryName': '推荐课', 'status': 0 }, {
+export const b = [{
   'id': 1,
   'categoryName': '公务员',
   'status': 0
