@@ -79,7 +79,7 @@ const App = () => {
     setPdfList([])
     axios.post('https://zl.xtjzx.cn/data_pack/api/data/upload', {
       page_num: pageNum,
-      category_id: cateId,
+      category_ids: ','+cateId,
       area_codes: cityCode,
       title_name: titleName,
       res_url: resUrl,
@@ -110,7 +110,14 @@ const App = () => {
         <Form.Item
           name="select"
           label="资源分类">
-          <Select allowClear onChange={(e) => {setCateId(e)}} placeholder="请选择资源分类">
+          <Select mode="multiple" allowClear onChange={(e) => {
+            console.log(e)
+            let str = ''
+            e.forEach(i=>{
+              str=str+i+','
+            })
+            setCateId(str)
+          }} placeholder="请选择资源分类">
             {cateList.map(item => {return <Option key={item.id} value={item.id}>{item.categoryName}</Option>})}
           </Select>
         </Form.Item>
