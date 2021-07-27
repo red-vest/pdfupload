@@ -5,12 +5,13 @@ import {
   Select,
   InputNumber,
   Button,
-  Upload,Input,
+  Upload, Input,
   message
 } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import React, { useState } from 'react'
+import Cover from './cover'
 
 const { Option } = Select
 const formItemLayout = {
@@ -72,14 +73,14 @@ const App = () => {
     }
   }
   const submit = () => {
-    if (pageNum === 0 || cateId === '' || cityCode === '' || titleName === '' || resUrl === '' || coverUrl === '' ) {
+    if (pageNum === 0 || cateId === '' || cityCode === '' || titleName === '' || resUrl === '' || coverUrl === '') {
       message.error('请检查是否存在未填写项，或者填写内容错误')
       return
     }
     setPdfList([])
     axios.post('https://zl.xtjzx.cn/data_pack/api/data/upload', {
       page_num: pageNum,
-      category_ids: ','+cateId,
+      category_ids: ',' + cateId,
       area_codes: cityCode,
       title_name: titleName,
       res_url: resUrl,
@@ -97,113 +98,97 @@ const App = () => {
     }).catch(err => console.log(err))
   }
   return (
-    <div>
-      <h1 style={{ textAlign: 'center' }}>资源上传</h1>
-      <Form name="validate_other" {...formItemLayout}>
+    <>
+      <div className={'input'}>
+        <h1 id={'hello'} style={{ textAlign: 'center' }}>资源上传</h1>
+        <Form name="validate_other" {...formItemLayout}>
 
-        <Form.Item
-          label="标题名"
-        >
-          <Input onChange={e => {setTitleName(e.target.value)}} value={titleName} placeholder="请输入标题名"/>
-        </Form.Item>
+          <Form.Item
+            label="标题名"
+          >
+            <Input onChange={e => {setTitleName(e.target.value)}} value={titleName} placeholder="请输入标题名"/>
+          </Form.Item>
 
-        <Form.Item
-          name="select"
-          label="资源分类">
-          <Select mode="multiple" allowClear onChange={(e) => {
-            console.log(e)
-            let str = ''
-            e.forEach(i=>{
-              str=str+i+','
-            })
-            setCateId(str)
-          }} placeholder="请选择资源分类">
-            {cateList.map(item => {return <Option key={item.id} value={item.id}>{item.categoryName}</Option>})}
-          </Select>
-        </Form.Item>
-
-        <Form.Item
-          name="select-city"
-          label="地区选择">
-          <Select
-            mode="multiple"
-            allowClear
-            placeholder="请选择对应地区"
-            onChange={(e) => {
+          <Form.Item
+            name="select"
+            label="资源分类">
+            <Select mode="multiple" allowClear onChange={(e) => {
+              console.log(e)
               let str = ''
-              e.forEach(i=>{
-                str = str+i+',';
+              e.forEach(i => {
+                str = str + i + ','
               })
-              setCityCode(str)
-            }}
-            filterOption={(input, option) =>
-              option.children.indexOf(input) >= 0
-            }
-          >
-            {a.map(item=>{
-              return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
-            })}
-          </Select>
-        </Form.Item>
+              setCateId(str)
+            }} placeholder="请选择资源分类">
+              {cateList.map(item => {return <Option key={item.id} value={item.id}>{item.categoryName}</Option>})}
+            </Select>
+          </Form.Item>
 
-        <Form.Item
-          name="upload"
-          label="上传pdf"
-        >
-          <Upload
-            maxCount={1}
-            fileList={pdfList}
-            action={upPdfUrl}
-            accept={'.pdf'}
-            name="file"
-            {...props}
+          <Form.Item
+            name="select-city"
+            label="地区选择">
+            <Select
+              mode="multiple"
+              allowClear
+              placeholder="请选择对应地区"
+              onChange={(e) => {
+                let str = ''
+                e.forEach(i => {
+                  str = str + i + ','
+                })
+                setCityCode(str)
+              }}
+              filterOption={(input, option) =>
+                option.children.indexOf(input) >= 0
+              }
+            >
+              {a.map(item => {
+                return <Option key={item.Code} value={item.Code}>{item.Name}</Option>
+              })}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="upload"
+            label="上传pdf"
           >
-            <Button icon={<UploadOutlined/>}>点击上传pdf</Button>
-          </Upload>
-        </Form.Item>
-        <Form.Item label="页数">
+            <Upload
+              maxCount={1}
+              fileList={pdfList}
+              action={upPdfUrl}
+              accept={'.pdf'}
+              name="file"
+              {...props}
+            >
+              <Button icon={<UploadOutlined/>}>点击上传pdf</Button>
+            </Upload>
+          </Form.Item>
+          <Form.Item label="页数">
             <InputNumber value={pageNum} onChange={e => {setPageNum(e)}} min={1} max={999}/>
-        </Form.Item>
-        {/*<Form.Item label="每页价格">*/}
-        {/*    <InputNumber*/}
-        {/*      defaultValue={0.1}*/}
-        {/*      step="0.1"*/}
-        {/*      min={0}*/}
-        {/*      formatter={value => `￥${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}*/}
-        {/*      parser={value => value.replace(/\￥\s?|(,*)/g, '')}*/}
-        {/*      onChange={e => {setPagePrice(e)}}*/}
-        {/*    />*/}
-        {/*</Form.Item>*/}
-        {/*<Form.Item label="邮费">*/}
-        {/*    <InputNumber*/}
-        {/*      defaultValue={12}*/}
-        {/*      step="1"*/}
-        {/*      min={0}*/}
-        {/*      formatter={value => `￥${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}*/}
-        {/*      parser={value => value.replace(/\￥\s?|(,*)/g, '')}*/}
-        {/*      onChange={e => {setCourieFee(e)}}*/}
-        {/*    />*/}
-        {/*</Form.Item>*/}
+          </Form.Item>
 
-        <Form.Item label="上传封面">
-          <Upload
-            fileList={coverList}
-            maxCount={1}
-            action={upPdfUrl}
-            name="file"
-            accept={'image/*'}
-            {...propsTwo}
-            listType="picture">
-            <Button icon={<UploadOutlined/>}>点击上传封面</Button>
-          </Upload>
-        </Form.Item>
-        <Form.Item
-          wrapperCol={{ span: 12, offset: 6, }}>
-          <Button onClick={() => submit()} type="primary">提交</Button>
-        </Form.Item>
+          <Form.Item
+            label="上传封面">
+            <Upload
+              fileList={coverList}
+              maxCount={1}
+              action={upPdfUrl}
+              name="file"
+              accept={'image/*'}
+              {...propsTwo}
+              listType="picture">
+              <Button icon={<UploadOutlined/>}>点击上传封面</Button>
+            </Upload>
+          </Form.Item>
+          <Form.Item
+            wrapperCol={{ span: 12, offset: 6, }}>
+            <Button onClick={() => submit()} type="primary">提交</Button>
+          </Form.Item>
 
-      </Form>
-    </div>
+        </Form>
+      </div>
+      <Cover/>
+    </>
   )
 }
 
