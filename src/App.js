@@ -164,7 +164,7 @@ const App = () => {
             </Upload>
           </Form.Item>
           <Form.Item label="页数">
-            <InputNumber value={pageNum} onChange={e => {setPageNum(e)}} min={1} max={999}/>
+            <InputNumber value={pageNum} onChange={e => {setPageNum(e)}} min={1} max={9999}/>
           </Form.Item>
 
           <Form.Item
@@ -184,7 +184,6 @@ const App = () => {
             wrapperCol={{ span: 12, offset: 6, }}>
             <Button onClick={() => submit()} type="primary">提交</Button>
           </Form.Item>
-
         </Form>
       </div>
       <Cover/>

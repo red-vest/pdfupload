@@ -1,22 +1,57 @@
-.cover{
-    width:50%;
-    margin-top: 200px;
+@font-face {
+    font-family: '阿里巴巴普惠体';
+    src: url("./font/ALIBABA-PUHUITI-REGULAR.OTF");
 }
-.edit{
-    width:300px;
-    position: relative;
+@font-face {
+    font-family: '汉仪正圆-85S';
+    src: url("./font/HYZhengYuan-85S(1).otf");
+}
+@font-face {
+    font-family: '思源宋体 CN';
+    src: url("./font/SourceHanSerifCN-Bold.otf");
+}
+@font-face {
+    font-family: '旁门正道标题体';
+    src: url("./font/庞门正道标题体2.0增强版.ttf");
+}
+@font-face {
+    font-family: "思源黑体 CN Medium";
+    src: url("./font/思源黑体 CN-Medium.otf");
+}
+@font-face {
+    font-family: "思源黑体 CN Regular";
+    src: url("./font/思源黑体 CN-Regular.otf");
 }
 
+.cover{
+    width:50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.edit{
+    width:500px;
+    height: 680px;
+    position: relative;
+    background-color: #fff;
+}
+.text{
+    position: absolute;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+}
 .img{
     user-select: none;
-    width: 300px;
+    width: 500px;
+    height: 680px;
 }
-.text1{
-    position: absolute;
-    top: 100px;
-    font-size: 30px;
-    color: #fff;
-    font-family: 华文楷体;
-    cursor: context-menu;
-    left: 0;
+.option{
+    display: flex;
+    justify-content: center;
+}
+.left{
+    margin-right: 20px;
+    width: 280px;
 }
