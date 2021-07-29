@@ -97,6 +97,10 @@ const App = () => {
       setPageNum(0)
     }).catch(err => console.log(err))
   }
+  const setList = (value)=>{
+    setCoverList(value)
+    setCoverUrl(value[0]['url'])
+  }
   return (
     <>
       <div className={'input'}>
@@ -186,7 +190,7 @@ const App = () => {
           </Form.Item>
         </Form>
       </div>
-      <Cover/>
+      <Cover getList={setList}/>
     </>
   )
 }
