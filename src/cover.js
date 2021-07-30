@@ -183,6 +183,7 @@ function Cover (props) {
     let data = new FormData()
     data.append('file', blob)
     let result = await axios.post(url, data)
+    message.info(result.data.status)
     getList([{ name: title, thumbUrl: base64, url: result.data.data.url }])
   }
 
