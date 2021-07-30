@@ -35,6 +35,7 @@
     height: 680px;
     position: relative;
     background-color: #fff;
+    overflow: hidden;
 }
 .text{
     position: absolute;
@@ -54,4 +55,17 @@
 .left{
     margin-right: 20px;
     width: 280px;
+}
+.colorPicker{
+    width: 50px;
+    height: 30px;
+    position: relative;
+    /*border: 3px solid rgba(0, 0, 0, 0.37);*/
+    border-radius: 2px;
+}
+.colorBox{
+    position: absolute;
+    z-index: 9999;
+    bottom: 0px;
+    left: 0px;
 }

@@ -1,7 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import html2canvas from 'html2canvas'
 import axios from 'axios'
-import { SettingOutlined, SettingFilled, SettingTwoTone } from '@ant-design/icons'
+import { SketchPicker,ChromePicker  } from 'react-color';
+import {
+  SettingOutlined,
+  SettingFilled,
+  SettingTwoTone,
+  AlignLeftOutlined,
+  AlignCenterOutlined,
+  AlignRightOutlined
+} from '@ant-design/icons'
 import './cover.css'
 import img from './d.jpg'
 import i7 from './back/7.png'
@@ -17,6 +25,7 @@ import {
   InputNumber,
   Button,
   Upload, Input,
+  Radio,
   message
 } from 'antd'
 
@@ -35,6 +44,7 @@ function dataURItoBlob (base64Data) {
   return new Blob([ia], { type: mimeString })
 }
 
+const fontFamily = ['阿里巴巴普惠体', '汉仪正圆-85S', '思源宋体 CN', '旁门正道标题体', '思源黑体 CN Medium', '思源黑体 CN Regular', '黑体', '宋体', '微软雅黑', '等线']
 const list = [
   {
     name: '医疗',
@@ -43,23 +53,23 @@ const list = [
     type: '',
     line1: { fontFamily: '思源宋体 CN', color: '#403f40', top: '155px', left: '83px', fontSize: '51px' },
     line2: { fontFamily: '思源宋体 CN', color: '#403f40', top: '296px', left: '132px', fontSize: '51px' },
-    line3: { fontFamily: '思源黑体 CN Medium', color: '#fff', top: '425px', left: '273px', fontSize: '44px' }
+    line3: { fontFamily: '思源黑体 CN Medium', color: '#ffffff', top: '425px', left: '273px', fontSize: '44px' }
   },
   {
     name: '军队文职', id: '6', url: i6, type: '',
     line1: {
       fontFamily: '旁门正道标题体',
-      color: '#fff',
+      color: '#ffffff',
       top: '160px',
-      left: '50%',
+      left: '250px',
       fontSize: '63px',
       transform: 'translateX(-50%)'
     },
     line2: {
       fontFamily: '旁门正道标题体',
-      color: '#fff',
+      color: '#ffffff',
       top: '230px',
-      left: '50%',
+      left: '250px',
       fontSize: '63px',
       transform: 'translateX(-50%)'
     },
@@ -68,17 +78,17 @@ const list = [
     name: '公务员和事业单位', id: '5', url: i5, type: '',
     line1: {
       fontFamily: '旁门正道标题体',
-      color: '#fff',
+      color: '#ffffff',
       top: '128px',
-      left: '50%',
+      left: '250px',
       fontSize: '53px',
       transform: 'translateX(-50%)'
     },
     line2: {
       fontFamily: '旁门正道标题体',
-      color: '#fff',
+      color: '#ffffff',
       top: '196px',
-      left: '50%',
+      left: '250px',
       fontSize: '53px',
       transform: 'translateX(-50%)'
     },
@@ -87,7 +97,7 @@ const list = [
     name: '教招1', id: '4', url: i4, type: '',
     line1: { fontFamily: '思源宋体 CN', color: '#403f40', top: '155px', left: '83px', fontSize: '51px' },
     line2: { fontFamily: '思源宋体 CN', color: '#403f40', top: '296px', left: '132px', fontSize: '51px' },
-    line3: { fontFamily: '思源黑体 CN Medium', color: '#fff', top: '425px', left: '273px', fontSize: '44px' }
+    line3: { fontFamily: '思源黑体 CN Medium', color: '#ffffff', top: '425px', left: '273px', fontSize: '44px' }
   },
   {
     name: '教招2', id: '3', url: i3, type: '',
@@ -95,7 +105,7 @@ const list = [
       fontFamily: '汉仪正圆-85S',
       color: '#000',
       top: '128px',
-      left: '50%',
+      left: '250px',
       fontSize: '55px',
       transform: 'translateX(-50%)'
     },
@@ -103,7 +113,7 @@ const list = [
       fontFamily: '汉仪正圆-85S',
       color: '#000',
       top: '196px',
-      left: '50%',
+      left: '250px',
       fontSize: '55px',
       transform: 'translateX(-50%)'
     },
@@ -114,7 +124,7 @@ const list = [
       fontFamily: '汉仪正圆-85S',
       color: '#000',
       top: '128px',
-      left: '50%',
+      left: '250px',
       fontSize: '55px',
       transform: 'translateX(-50%)'
     },
@@ -122,7 +132,7 @@ const list = [
       fontFamily: '汉仪正圆-85S',
       color: '#000',
       top: '196px',
-      left: '50%',
+      left: '250px',
       fontSize: '55px',
       transform: 'translateX(-50%)'
     },
@@ -133,7 +143,7 @@ const list = [
       fontFamily: '汉仪正圆-85S',
       color: '#000',
       top: '128px',
-      left: '50%',
+      left: '250px',
       fontSize: '70px',
       transform: 'translateX(-50%)'
     },
@@ -141,7 +151,7 @@ const list = [
       fontFamily: '汉仪正圆-85S',
       color: '#000',
       top: '210px',
-      left: '50%',
+      left: '250px',
       fontSize: '70px',
       transform: 'translateX(-50%)'
     },
@@ -150,14 +160,16 @@ const list = [
 
 function Cover (props) {
   const { getList } = props
-  const [ editNum, setEditNum ] = useState(1)
+  const [editNum, setEditNum] = useState(1)
+  const [displayColorPicker,setDisplayColorPicker] = useState(false)
   const [select, setSelect] = useState(list[0])
-  const [one, setOne] = useState(list[0]['line1'])
-  const [two, setTwo] = useState(list[0]['line2'])
-  const [thr, setThr] = useState(list[0]['line3'])
+  const [s1, setS1] = useState(list[0]['line1'])
+  const [s2, setS2] = useState(list[0]['line2'])
+  const [s3, setS3] = useState(list[0]['line3'])
   const [line1, setLine1] = useState('')
   const [line2, setLine2] = useState('')
   const [line3, setLine3] = useState('')
+  
 
   const html2image = async function () {
     let canvas = await html2canvas(document.querySelector('#edit'), { useCORS: true })
@@ -183,8 +195,112 @@ function Cover (props) {
     alink.click()
 
   }
+  const fontFamilyChange = (value) => {
+    switch (editNum) {
+      case 1:
+        setS1({ ...s1, fontFamily: value })
+        break
+      case 2:
+        setS2({ ...s2, fontFamily: value })
+        break
+      case 3:
+        setS3({ ...s3, fontFamily: value })
+        break
+    }
+  }
+  const fontSizeChange = (value) => {
+    switch (editNum) {
+      case 1:
+        setS1({ ...s1, fontSize: value + 'px' })
+        break
+      case 2:
+        setS2({ ...s2, fontSize: value + 'px' })
+        break
+      case 3:
+        setS3({ ...s3, fontSize: value + 'px' })
+        break
+    }
+  }
+  const colorChange = (value) => {
+    switch (editNum) {
+      case 1:
+        setS1({ ...s1, color: value })
+        break
+      case 2:
+        console.log(2)
+        setS2({ ...s2, color: value })
+        break
+      case 3:
+        console.log(3)
+        setS3({ ...s3, color: value })
+        break
+    }
+  }
+  const topChange = (value) => {
+    switch (editNum) {
+      case 1:
+        setS1({ ...s1, top: value + 'px' })
+        break
+      case 2:
+        setS2({ ...s2, top: value + 'px' })
+        break
+      case 3:
+        setS3({ ...s3, top: value + 'px' })
+        break
+    }
+  }
+  const leftChange = (value) => {
+    switch (editNum) {
+      case 1:
+        setS1({ ...s1, left: value + 'px' })
+        break
+      case 2:
+        setS2({ ...s2, left: value + 'px' })
+        break
+      case 3:
+        setS3({ ...s3, left: value + 'px' })
+        break
+    }
+  }
+  const align = (value) => {
+    switch (editNum) {
+      case 1:
+        setS1({
+          ...s1,
+          left: value === 'left' ? '0px' : value === 'center' ? '250px' : '500px',
+          transform: value === 'left' ? 'translateX(0%)' : value === 'center' ? 'translateX(-50%)' : 'translateX(-100%)'
+        })
+        break
+      case 2:
+        setS2({
+          ...s2, left: value === 'left' ? '0px' : value === 'center' ? '250px' : '500px',
+          transform: value === 'left' ? 'translateX(0%)' : value === 'center' ? 'translateX(-50%)' : 'translateX(-100%)'
+        })
+        break
+      case 3:
+        setS3({
+          ...s3, left: value === 'left' ? '0px' : value === 'center' ? '250px' : '500px',
+          transform: value === 'left' ? 'translateX(0%)' : value === 'center' ? 'translateX(-50%)' : 'translateX(-100%)'
+        })
+        break
+    }
+  }
+  const reset = ()=>{
+    switch (editNum) {
+      case 1:
+        setS1(select['line1'])
+        break
+      case 2:
+        setS2(select['line2'])
+        break
+      case 3:
+        setS3(select['line3'])
+        break
+    }
+  }
   return (
     <div className={'cover'}>
+      <h1>合成封面</h1>
       <div className={'option'}>
         <div className={'left'}>
           <h2>选项</h2>
@@ -193,10 +309,11 @@ function Cover (props) {
               <Select defaultValue={'7'} onSelect={_ => {
                 let index = list.findIndex(i => i.id === _)
                 setSelect(list[index])
+                setEditNum(1)
                 try {
-                  setOne(list[index]['line1'])
-                  setTwo(list[index]['line2'])
-                  setThr(list[index]['line3'])
+                  setS1(list[index]['line1'])
+                  setS2(list[index]['line2'])
+                  setS3(list[index]['line3'])
                 } catch (e) {}
                 setLine1('')
                 setLine2('')
@@ -209,17 +326,20 @@ function Cover (props) {
             </Form.Item>
             <Form.Item label="行一">
               <Input
-                addonAfter={<div onClick={_ => setEditNum(1)}>{editNum === 1 ? <SettingFilled/> : <SettingOutlined/>}</div>}
+                addonAfter={<div style={select.line1===undefined?{pointerEvents:'none'}:{}} onClick={_ => setEditNum(1)}>{editNum === 1 ? <SettingFilled/> :
+                  <SettingOutlined/>}</div>}
                 disabled={select.line1 === undefined} onChange={_ => setLine1(_.target.value)} value={line1}/>
             </Form.Item>
             <Form.Item label="行二">
               <Input
-                addonAfter={<div onClick={_ => setEditNum(2)}>{editNum === 2 ? <SettingFilled/> : <SettingOutlined/>}</div>}
+                addonAfter={<div style={select.line2===undefined?{pointerEvents:'none'}:{}} onClick={_ => setEditNum(2)}>{editNum === 2 ? <SettingFilled/> :
+                  <SettingOutlined/>}</div>}
                 disabled={select.line2 === undefined} onChange={_ => setLine2(_.target.value)} value={line2}/>
             </Form.Item>
             <Form.Item label="行三">
               <Input
-                addonAfter={<div onClick={_ => setEditNum(3)}>{editNum === 3 ? <SettingFilled/> : <SettingOutlined/>}</div>}
+                addonAfter={<div style={select.line3===undefined?{pointerEvents:'none'}:{}} onClick={_ => setEditNum(3)}>{editNum === 3 ? <SettingFilled/> :
+                  <SettingOutlined/>}</div>}
                 disabled={select.line3 === undefined} onChange={_ => setLine3(_.target.value)} value={line3}/>
             </Form.Item>
             <div>
@@ -228,34 +348,55 @@ function Cover (props) {
             </div>
           </Form>
 
-          <Form style={{marginTop:'50px'}}>
-            <h2>字体样式调整</h2>
-            <Form.Item label='字形'>
-              <Select>
-                <Select.Option>华文行楷</Select.Option>
+          <Form style={{ marginTop: '50px' }}>
+            <h2>字体样式调整(行{editNum})</h2>
+            <Form.Item label="字形">
+              <Select value={editNum === 1 ? s1['fontFamily'] : editNum === 2 ? s2['fontFamily'] : s3['fontFamily']}
+                      onSelect={_ => fontFamilyChange(_)}>
+                {fontFamily.map((item, index) => {
+                  return <Select.Option key={index} value={item}>{item}</Select.Option>
+                })}
               </Select>
             </Form.Item>
-            <Form.Item label='字体大小'>
-              <InputNumber/>
-            </Form.Item>
-            <Form.Item label='颜色'>
-              <Input onInput={_=>console.log(_.target.value)} style={{width:'50px'}} type='color'/>
-            </Form.Item>
-            <Form.Item label='距上边缘'>
-              <InputNumber formatter={value => `${value}px`}
+            <Form.Item label="字体大小">
+              <InputNumber onChange={fontSizeChange}
+                           value={parseInt(editNum === 1 ? s1['fontSize'] : editNum === 2 ? s2['fontSize'] : s3['fontSize'])}
+                           formatter={value => `${value}px`}
                            parser={value => value.replace('px', '')}/>
             </Form.Item>
-            <Form.Item label='距左边缘'>
-              <InputNumber formatter={value => `${value}px`}
+            <Form.Item label="颜色">
+              <input type='color'
+                     value={editNum===1?s1['color']:editNum===2?s2['color']:s3['color']}
+                     onChange={_=>colorChange(_.target.value)}
+                className={'colorPicker'}/>
+            </Form.Item>
+            <Form.Item label="距上边缘">
+              <InputNumber onChange={topChange}
+                           value={parseInt(editNum === 1 ? s1['top'] : editNum === 2 ? s2['top'] : s3['top'])}
+                           formatter={value => `${value}px`}
                            parser={value => value.replace('px', '')}/>
             </Form.Item>
+            <Form.Item label="距左边缘">
+              <InputNumber onChange={leftChange}
+                           value={parseInt(editNum === 1 ? s1['left'] : editNum === 2 ? s2['left'] : s3['left'])}
+                           formatter={value => `${value}px`}
+                           parser={value => value.replace('px', '')}/>
+            </Form.Item>
+            <Form.Item label="左右对齐">
+              <Radio.Group onChange={_ => align(_.target.value)}>
+                <Radio.Button value="left"><AlignLeftOutlined/></Radio.Button>
+                <Radio.Button value="center"><AlignCenterOutlined/></Radio.Button>
+                <Radio.Button value="right"><AlignRightOutlined/></Radio.Button>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item><Button onClick={_=>reset()}>重置样式</Button></Form.Item>
           </Form>
         </div>
         <div id={'edit'} className={'edit'}>
           <img className={'img'} src={select['url']}/>
-          <p style={one} className={'text'}>{line1}</p>
-          <p style={two} className={'text'}>{line2}</p>
-          <p style={thr} className={'text'}>{line3}</p>
+          <p style={s1} className={'text'}>{line1}</p>
+          <p style={s2} className={'text'}>{line2}</p>
+          <p style={s3} className={'text'}>{line3}</p>
         </div>
       </div>
     </div>
