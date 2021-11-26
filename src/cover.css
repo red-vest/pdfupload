@@ -22,15 +22,25 @@
     font-family: "思源黑体 CN Regular";
     src: url("./font/思源黑体 CN-Regular.otf");
 }
+@font-face {
+    font-family: "仓耳渔阳体";
+    src: url("./font/TsangerYuYangT-W05.ttf");
+}
+@font-face {
+    font-family: "江西拙楷";
+    src: url("./font/江西拙楷.ttf");
+}
 
 .cover{
     width:50%;
+    background-color: #fafafa;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 .edit{
+    transform: scale(0.8);
     width:500px;
     height: 680px;
     position: relative;

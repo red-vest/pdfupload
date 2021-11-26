@@ -12,6 +12,8 @@ import {
 } from '@ant-design/icons'
 import './cover.css'
 import img from './d.jpg'
+import i9 from './back/9.png'
+import i8 from './back/8.png'
 import i7 from './back/7.png'
 import i6 from './back/6.png'
 import i5 from './back/5.png'
@@ -19,6 +21,11 @@ import i4 from './back/4.png'
 import i3 from './back/3.png'
 import i2 from './back/2.png'
 import i1 from './back/1.png'
+import i10 from './back/10.png'
+import i11 from './back/11.png'
+import i12 from './back/12.png'
+import i13 from './back/13.png'
+import i14 from './back/14.png'
 import {
   Form,
   Select,
@@ -44,8 +51,136 @@ function dataURItoBlob (base64Data) {
   return new Blob([ia], { type: mimeString })
 }
 
-const fontFamily = ['阿里巴巴普惠体', '汉仪正圆-85S', '思源宋体 CN', '旁门正道标题体', '思源黑体 CN Medium', '思源黑体 CN Regular', '黑体', '宋体', '微软雅黑', '等线']
+const fontFamily = ['阿里巴巴普惠体','江西拙楷','仓耳渔阳体', '汉仪正圆-85S', '思源宋体 CN', '旁门正道标题体', '思源黑体 CN Medium', '思源黑体 CN Regular', '黑体', '宋体', '微软雅黑', '等线']
 const list = [
+  {
+    name: '公考时政', id: '14', url: i14, type: '',
+    line1: {
+      fontFamily: '旁门正道标题体',
+      color: '#fad78c',
+      top: '120px',
+      left: '170px',
+      fontSize: '75px',
+      transform: 'translateX(-50%)'
+    },
+    line2: {
+      fontFamily: '旁门正道标题体',
+      color: '#ffffff',
+      top: '120px',
+      left: '350px',
+      fontSize: '75px',
+      transform: 'translateX(-50%)'
+    },
+    line3: {
+      fontFamily: '旁门正道标题体',
+      color: '#ffffff',
+      top: '200px',
+      left: '250px',
+      fontSize: '75px',
+      transform: 'translateX(-50%)'
+    },
+  },
+  {
+    name: '公考考情', id: '13', url: i13, type: '',
+    line1: {
+      fontFamily: '旁门正道标题体',
+      color: '#ffffff',
+      top: '120px',
+      left: '250px',
+      fontSize: '67px',
+      transform: 'translateX(-50%)'
+    },
+    line2: {
+      fontFamily: '旁门正道标题体',
+      color: '#ffffff',
+      top: '190px',
+      left: '250px',
+      fontSize: '67px',
+      transform: 'translateX(-50%)'
+    },
+  },
+  {
+    name: '公考面试', id: '12', url: i12, type: '',
+    line1: {
+      fontFamily: '江西拙楷',
+      color: '#246acf',
+      top:'105px',
+      left:'250px',
+      fontSize: '60px',
+      transform: 'translateX(-50%)'
+    },
+    line2: {
+      fontFamily: '江西拙楷',
+      color: '#246acf',
+      top:'190px',
+      left:'250px',
+      fontSize: '60px',
+      transform: 'translateX(-50%)'
+    }
+  },
+  {
+    name: '教招考情', id: '11', url: i11, type: '',
+    line1: {
+      fontFamily: '仓耳渔阳体',
+      color: '#333333',
+      top:'105px',
+      left:'250px',
+      fontSize: '75px',
+      transform: 'translateX(-50%)'
+    },
+    line2: {
+      fontFamily: '仓耳渔阳体',
+      color: '#333333',
+      top:'190px',
+      left:'250px',
+      fontSize: '75px',
+      transform: 'translateX(-50%)'
+    }
+  },
+  {
+    name: '教招时政', id: '10', url: i10, type: '',
+    line1: {
+      fontFamily: '旁门正道标题体',
+      color: '#ffffff',
+      top: '100px',
+      left: '250px',
+      fontSize: '67px',
+      transform: 'translateX(-50%)'
+    },
+    line2: {
+      fontFamily: '旁门正道标题体',
+      color: '#ffffff',
+      top: '170px',
+      left: '250px',
+      fontSize: '67px',
+      transform: 'translateX(-50%)'
+    },
+  },
+  {
+    name: '教招真题', id: '9', url: i9, type: '',
+    line1: {
+      fontFamily: '旁门正道标题体',
+      color: '#ffffff',
+      top: '100px',
+      left: '250px',
+      fontSize: '67px',
+      transform: 'translateX(-50%)'
+    },
+    line2: {
+      fontFamily: '旁门正道标题体',
+      color: '#ffffff',
+      top: '170px',
+      left: '250px',
+      fontSize: '67px',
+      transform: 'translateX(-50%)'
+    },
+  },
+  {
+    name:'考编百事通',
+    id:'8',
+    url:i8,
+    type:''
+  },
   {
     name: '医疗',
     id: '7',
@@ -169,7 +304,7 @@ function Cover (props) {
   const [line1, setLine1] = useState('')
   const [line2, setLine2] = useState('')
   const [line3, setLine3] = useState('')
-  
+
 
   const html2image = async function () {
     let canvas = await html2canvas(document.querySelector('#edit'), { useCORS: true })
@@ -307,7 +442,7 @@ function Cover (props) {
           <h2>选项</h2>
           <Form>
             <Form.Item label="课程类型">
-              <Select defaultValue={'7'} onSelect={_ => {
+              <Select defaultValue={'14'} onSelect={_ => {
                 let index = list.findIndex(i => i.id === _)
                 setSelect(list[index])
                 setEditNum(1)
@@ -348,50 +483,51 @@ function Cover (props) {
               <Button onClick={() => save()}>保存封面</Button>
             </div>
           </Form>
-
-          <Form style={{ marginTop: '50px' }}>
-            <h2>字体样式调整(行{editNum})</h2>
-            <Form.Item label="字形">
-              <Select value={editNum === 1 ? s1['fontFamily'] : editNum === 2 ? s2['fontFamily'] : s3['fontFamily']}
-                      onSelect={_ => fontFamilyChange(_)}>
-                {fontFamily.map((item, index) => {
-                  return <Select.Option key={index} value={item}>{item}</Select.Option>
-                })}
-              </Select>
-            </Form.Item>
-            <Form.Item label="字体大小">
-              <InputNumber onChange={fontSizeChange}
-                           value={parseInt(editNum === 1 ? s1['fontSize'] : editNum === 2 ? s2['fontSize'] : s3['fontSize'])}
-                           formatter={value => `${value}px`}
-                           parser={value => value.replace('px', '')}/>
-            </Form.Item>
-            <Form.Item label="颜色">
-              <input type='color'
-                     value={editNum===1?s1['color']:editNum===2?s2['color']:s3['color']}
-                     onChange={_=>colorChange(_.target.value)}
-                className={'colorPicker'}/>
-            </Form.Item>
-            <Form.Item label="距上边缘">
-              <InputNumber onChange={topChange}
-                           value={parseInt(editNum === 1 ? s1['top'] : editNum === 2 ? s2['top'] : s3['top'])}
-                           formatter={value => `${value}px`}
-                           parser={value => value.replace('px', '')}/>
-            </Form.Item>
-            <Form.Item label="距左边缘">
-              <InputNumber onChange={leftChange}
-                           value={parseInt(editNum === 1 ? s1['left'] : editNum === 2 ? s2['left'] : s3['left'])}
-                           formatter={value => `${value}px`}
-                           parser={value => value.replace('px', '')}/>
-            </Form.Item>
-            <Form.Item label="左右对齐">
-              <Radio.Group onChange={_ => align(_.target.value)}>
-                <Radio.Button value="left"><AlignLeftOutlined/></Radio.Button>
-                <Radio.Button value="center"><AlignCenterOutlined/></Radio.Button>
-                <Radio.Button value="right"><AlignRightOutlined/></Radio.Button>
-              </Radio.Group>
-            </Form.Item>
-            <Form.Item><Button onClick={_=>reset()}>重置样式</Button></Form.Item>
-          </Form>
+          {
+            select.line1===undefined?'':<Form style={{ marginTop: '50px' }}>
+              <h2>字体样式调整(行{editNum})</h2>
+              <Form.Item label="字形">
+                <Select value={editNum === 1 ? s1['fontFamily'] : editNum === 2 ? s2['fontFamily'] : s3['fontFamily']}
+                        onSelect={_ => fontFamilyChange(_)}>
+                  {fontFamily.map((item, index) => {
+                    return <Select.Option key={index} value={item}>{item}</Select.Option>
+                  })}
+                </Select>
+              </Form.Item>
+              <Form.Item label="字体大小">
+                <InputNumber onChange={fontSizeChange}
+                             value={parseInt(editNum === 1 ? s1['fontSize'] : editNum === 2 ? s2['fontSize'] : s3['fontSize'])}
+                             formatter={value => `${value}px`}
+                             parser={value => value.replace('px', '')}/>
+              </Form.Item>
+              <Form.Item label="颜色">
+                <input type='color'
+                       value={editNum===1?s1['color']:editNum===2?s2['color']:s3['color']}
+                       onChange={_=>colorChange(_.target.value)}
+                       className={'colorPicker'}/>
+              </Form.Item>
+              <Form.Item label="距上边缘">
+                <InputNumber onChange={topChange}
+                             value={parseInt(editNum === 1 ? s1['top'] : editNum === 2 ? s2['top'] : s3['top'])}
+                             formatter={value => `${value}px`}
+                             parser={value => value.replace('px', '')}/>
+              </Form.Item>
+              <Form.Item label="距左边缘">
+                <InputNumber onChange={leftChange}
+                             value={parseInt(editNum === 1 ? s1['left'] : editNum === 2 ? s2['left'] : s3['left'])}
+                             formatter={value => `${value}px`}
+                             parser={value => value.replace('px', '')}/>
+              </Form.Item>
+              <Form.Item label="左右对齐">
+                <Radio.Group onChange={_ => align(_.target.value)}>
+                  <Radio.Button value="left"><AlignLeftOutlined/></Radio.Button>
+                  <Radio.Button value="center"><AlignCenterOutlined/></Radio.Button>
+                  <Radio.Button value="right"><AlignRightOutlined/></Radio.Button>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item><Button onClick={_=>reset()}>重置样式</Button></Form.Item>
+            </Form>
+          }
         </div>
         <div id={'edit'} className={'edit'}>
           <img className={'img'} src={select['url']}/>
